@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>My chat</title>
+</head>
+<body>
+	<h1>My Brand New Chat</h1>
+	<h3>Authorization</h3>
+	<ul>
+		{% if user.is_authenticated %}
+			<li>You've signed in as "{{user}}" with id:{{user.id}}</li>
+            <a href="{% url 'accounts:signout' %}">Sign out</a><br><br>
+		{% else %}
+            <li>You haven't singed in yet. You can't send messages</li>
+            <a href="{% url 'accounts:signin' %}">Sign in</a><br><br>
+		{% endif %}
+        ...or <a href="{% url 'accounts:signup' %}">Create new account</a><br><br>
+	</ul>
+	{% if user.is_authenticated %}
+        <form method="post">
+            <h3>Find companion to chat with:</h3>
+            {% csrf_token %}
+            {{  form.as_p }}<br>
+            <label>
+                {% if banned %}
+                    User has banned you
+                {% elif failed %}
+                    User with such name does not exist
+                {% endif %}
+            </label>
+            <iput type="submit" value="Find"></iput>
+        </form>
+	{% endif %}
+</body>
+</html>

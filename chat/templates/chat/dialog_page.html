@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat</title>
+</head>
+<body>
+    <h3><a href="{% url 'chat:index' %}">homepage</a></h3>
+    <table>
+        <tr>
+            <td><h1>Dialog with {{ companion }}</h1></td>
+            {% if not banned %}
+                <td>&nbsp &nbsp &nbsp | &nbsp &nbsp &nbsp<a href="{% url 'chat:ban' user.id companion.id %}">ban user</a></td>
+            {% else %}
+                <td>&nbsp &nbsp &nbsp | &nbsp &nbsp &nbsp<a href="{% url 'chat:unban' user.id companion.id %}">unban user</a></td>
+            {% endif %}
+        </tr>
+    </table>
+    <ul>
+        {% if messages %}
+            {% for msg in messages %}
+                <li>
+                    <h4>From {{ msg.from_user }} {% if msg.from_user == user %} (you) {% endif %} :</h4>
+                    {{ msg.text }}
+                </li>
+            {% endfor %}
+        {% else %}
+            <h4>No messages now. Try send first one!</h4>
+        {% endif %}
+
+        {% if not banned %}
+            <br><br><br>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Send"/>
+            </form>
+        {% endif %}
+    </ul>
+</body>
+</html>
