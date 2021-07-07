@@ -6,7 +6,7 @@ path = '/home/myusername/mysite'
 if path not in sys.path:
     sys.path.insert(0, path)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'test_django.settings'
 
 ## Uncomment the lines below depending on your Django version
 ###### then, for Django >=1.5:
