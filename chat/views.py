@@ -1,5 +1,7 @@
+import simplejson
+from django.conf.urls import url
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -74,3 +76,25 @@ def unban(request, creator_id, target_id):
         except:
             pass
     return redirect('chat:index')
+
+
+def reload_messages(request, companion_id):
+    try:
+        message = Message.objects.filter(Q(from_user=request.user, to_user_id=companion_id) |
+                                          Q(from_user_id=companion_id, to_user=request.user)).order_by('date')[0]
+    except Message.DoesNotExist:
+        messages = None
+    response = {
+        'message': message
+    }
+    return JsonResponse(response)
+
+
+def reload_messages(request, companion_id):
+    try:
+        message = Message.objects.filter(Q(from_user=request.user, to_user_id=companion_id) |
+                                     Q(from_user_id=companion_id, to_user=request.user)).order_by('date')[0]
+    except Message.DoesNotExist:
+        message = None
+
+    return HttpResponse(simplejson.dumps(message), mimetype='application/json')
