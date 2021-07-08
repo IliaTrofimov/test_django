@@ -16,7 +16,7 @@
             {% endif %}
         </tr>
     </table>
-    <ul>
+    <ul id="messages_list">
         {% if messages %}
             {% for msg in messages %}
                 <li>
@@ -37,5 +37,18 @@
             </form>
         {% endif %}
     </ul>
+    <script type="text/javascript">
+        $(function() {
+            setTimeout(updateChat, 5000)
+        });
+        LATEST_CHAT_URL = "{% url 'chat:reload_messages' companion.id %}";
+        function updateChat() {
+            $.getJSON(LATEST_CHAT_URL, function(data){
+                $.each(data.items, function(i, item){
+                    $('#messages-list').innerHTML += '<li>' + item.text + '</li>';
+                });
+            });
+        }
+    </script>
 </body>
 </html>
